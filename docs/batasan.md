@@ -1,10 +1,10 @@
-# Batasan — NZeyMod Manager
+# Batasan — NZeyMod Launcher v2.0-beta
 
 Dokumen ini menjelaskan batasan secara jujur, agar tidak ada klaim yang melebihi kemampuan aplikasi dan ROM.
 
-## 1. Manager bukan mesin virtual
+## 1. Launcher bukan mesin virtual
 
-NZeyMod Manager tidak menjalankan ROM Android 11. Manager hanya menyiapkan berkas: menggabungkan part ROM, membuat identitas, menyimpan profil, menyiapkan keybox, dan menampilkan daftar modul. ROM hanya berjalan di dalam NZey Master (atau Virtual Master).
+NZeyMod Launcher tidak menjalankan ROM Android 11. Launcher hanya menyiapkan berkas: memilih ROM utuh dari penyimpanan, memverifikasi SHA-256, menyalinnya ke folder `NZeyMod/`, menggabungkan part ROM, membuat identitas, menyimpan profil, menyiapkan keybox, dan menampilkan daftar modul — lalu meluncurkan NZey Master. ROM hanya berjalan di dalam NZey Master (atau Virtual Master).
 
 ## 2. Play Integrity STRONG tidak dijamin
 
@@ -42,7 +42,7 @@ Fitur Cek Kebocoran di Manager memeriksa perangkat host. Hasilnya tidak membukti
 
 ## 8. APK belum diuji di perangkat fisik
 
-APK versi 1.0-beta dibangun dan diverifikasi secara statis di lingkungan pengembangan (tanda tangan, manifest, dan SHA-256). APK belum dipasang dan diuji di perangkat fisik. Pengujian di perangkat POCO X7 Pro masih diperlukan sebelum digunakan secara rutin.
+APK versi 2.0-beta dibangun dan diverifikasi secara statis di lingkungan pengembangan (tanda tangan, manifest, dan SHA-256). APK belum dipasang dan diuji di perangkat fisik. Pengujian di perangkat POCO X7 Pro masih diperlukan sebelum digunakan secara rutin, terutama alur impor ROM utuh ke NZey Master.
 
 ## 9. Keamanan berkas
 
