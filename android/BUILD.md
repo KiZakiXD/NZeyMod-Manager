@@ -2,7 +2,7 @@
 
 Aplikasi Android native (Java saja, tanpa Gradle, tanpa dependensi eksternal).
 Paket: `com.kizakixd.nzeymodmanager`, label NZeyMod Launcher, minSdk 26,
-targetSdk 34, versionCode 2, versionName 2.0-beta.
+targetSdk 34, versionCode 3, versionName 2.1-beta. Launcher v2.1-beta meluncurkan NZey Master paket baru com.kizakixd.nzeymaster (fallback paket lama).
 
 ## Prasyarat
 
