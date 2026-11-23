@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/subtitle"
+            android:paddingBottom="16dp" />
+
+        <!-- Identitas -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_identity"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_operator_mode" />
+
+        <Spinner
+            android:id="@+id/spinnerOperatorMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnGenerate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_generate" />
+
+        <TextView
+            android:id="@+id/tvAndroidId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Android ID: -" />
+
+        <TextView
+            android:id="@+id/tvSerial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Serial: -" />
+
+        <TextView
+            android:id="@+id/tvImei"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="IMEI: -" />
+
+        <TextView
+            android:id="@+id/tvOperator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Operator: -" />
+
+        <Button
+            android:id="@+id/btnSaveIdentity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save_identity" />
+
+        <Button
+            android:id="@+id/btnShareIdentity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_share_identity" />
+
+        <TextView
+            android:id="@+id/tvIdentityPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lokasi penyimpanan: belum disimpan" />
+
+        <!-- Profil -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_profiles"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <EditText
+            android:id="@+id/etProfileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_profile_name"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnSaveProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save_profile" />
+
+        <Spinner
+            android:id="@+id/spinnerProfiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnLoadProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_load_profile" />
+
+        <Button
+            android:id="@+id/btnDeleteProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_delete_profile" />
+
+        <Button
+            android:id="@+id/btnRefreshProfiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_refresh_profiles" />
+
+        <TextView
+            android:id="@+id/tvProfiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_profiles" />
+
+        <!-- ROM -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_rom"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rom_expected_text" />
+
+        <Button
+            android:id="@+id/btnPickParts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_pick_parts" />
+
+        <TextView
+            android:id="@+id/tvPartsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_parts" />
+
+        <Button
+            android:id="@+id/btnPickOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_pick_output" />
+
+        <ProgressBar
+            android:id="@+id/progressBarRom"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="0"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvRomProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tvRomResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <!-- Magisk -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_magisk"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <Switch
+            android:id="@+id/switchMagisk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Magisk" />
+
+        <TextView
+            android:id="@+id/tvMagiskStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/magisk_off_text" />
+
+        <TextView
+            android:id="@+id/tvModules"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/modules_text"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvDenyList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/denylist_text"
+            android:visibility="gone" />
+
+        <!-- Keybox -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_keybox"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/keybox_warning" />
+
+        <Button
+            android:id="@+id/btnPickKeybox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_pick_keybox" />
+
+        <TextView
+            android:id="@+id/tvKeyboxStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Keybox: belum dipilih" />
+
+        <!-- Pemeriksaan kebocoran -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_leak"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pemeriksaan ini hanya memeriksa perangkat host (ponsel ini). Pemeriksaan yang sebenarnya hanya berlaku di dalam VM." />
+
+        <Button
+            android:id="@+id/btnLeakCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_leak_check" />
+
+        <TextView
+            android:id="@+id/tvLeakResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Belum diperiksa" />
+
+        <!-- NZey Master -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_nzey"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvNzeyInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nzey_info_text" />
+
+        <Button
+            android:id="@+id/btnDownloadNzey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_download_nzey" />
+
+        <Button
+            android:id="@+id/btnCheckNzey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_check_nzey" />
+
+        <TextView
+            android:id="@+id/tvNzeyInstalled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status pemasangan: belum diperiksa" />
+
+        <!-- Kejujuran -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_honesty"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvHonesty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp"
+            android:text="@string/honesty_text" />
+
+    </LinearLayout>
+</ScrollView>
