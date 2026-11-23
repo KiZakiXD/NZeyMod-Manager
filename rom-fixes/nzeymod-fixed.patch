@@ -1,0 +1,47 @@
+--- a/scripts/operators_id.txt
++++ b/scripts/operators.txt
+@@
+-# Indonesian operators for identity randomizer (name|numeric MCCMNC|alpha)
+-Telkomsel|51010|Telkomsel
+-Indosat Ooredoo|51021|Indosat Ooredoo
+-XL Axiata|51011|XL
+-AXIS|51008|AXIS
+-Tri|51089|3
+-Smartfren|51009|Smartfren
++# Indonesian operators for identity randomizer (name|numeric MCCMNC|alpha)
++# NOTE: nzeymod.sh reads $SYS/operators.txt, so this file MUST be named
++# operators.txt (not operators_id.txt) inside /system/nzeymod/.
++Telkomsel|51010|Telkomsel
++Indosat Ooredoo|51021|Indosat Ooredoo
++XL Axiata|51011|XL
++AXIS|51008|AXIS
++Tri|51089|3
++Smartfren|51009|Smartfren
+--- a/scripts/config.prop
++++ b/scripts/config.prop
+@@
+ # NZeyMod user config - file aktif ada di /sdcard/NZeyMod/config.prop (edit di sana, lalu reboot)
+ # operator_mode: random | telkomsel | indosat | xl | axis | tri | smartfren
+ operator_mode=random
++# identity_mode: full | basic (hanya dipakai aplikasi NZeyMod Identity, tidak dibaca nzeymod.sh)
++identity_mode=full
++# keybox_path: lokasi cadangan keybox di dalam VM
++keybox_path=/sdcard/NZeyMod/keybox.xml
++# randomize_on_boot: true | false (hanya dipakai aplikasi, nzeymod.sh hanya membuat identitas bila identity.json belum ada)
++randomize_on_boot=true
++# wipe_profiles_on_randomize: true | false (hanya dipakai aplikasi)
++wipe_profiles_on_randomize=false
++# show_toast: true | false (hanya dipakai aplikasi)
++show_toast=true
+ # Catatan: identitas device (Pixel 5) tertanam di build.prop ROM.
+-# Ganti keybox: pakai aplikasi NZeyMod Identity > GANTI KEYBOX, atau timpa /sdcard/NZeyMod/keybox.xml lalu reboot.
++# Ganti keybox: pakai NZeyMod Manager > Ganti Keybox, atau timpa /sdcard/NZeyMod/keybox.xml lalu reboot.
+ # Modul tambahan: install manual via aplikasi Magisk, atau minta repack.
+--- a/props/vendor-build.prop
++++ b/props/vendor-build.prop
+@@
+-ro.product.board=flame
++ro.product.board=redfin
+ # NOTE: flame adalah Pixel 4. Seluruh identitas lain di ROM ini adalah
+ # Pixel 5 (redfin): model, device, dan fingerprint. Gunakan redfin
+ # agar konsisten.

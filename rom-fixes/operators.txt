@@ -1,0 +1,6 @@
+Telkomsel|51010|Telkomsel
+Indosat Ooredoo|51021|Indosat Ooredoo
+XL Axiata|51011|XL
+AXIS|51008|AXIS
+Tri|51089|3
+Smartfren|51009|Smartfren
