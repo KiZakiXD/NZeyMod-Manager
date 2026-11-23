@@ -1,4 +1,4 @@
-# Panduan — NZeyMod Launcher v2.0-beta
+# Panduan — NZeyMod Launcher v2.1-beta
 
 ## Penting: Launcher ini BUKAN mesin virtual
 
@@ -19,22 +19,26 @@ host.
 ## 1. Persiapan
 
 1. Pastikan ruang kosong di perangkat host minimal 1 GB: sekitar 405 MB
-   untuk ROM utuh, dan 145 MB untuk APK NZey Master (bila belum terpasang).
-   Bila masih memakai 5 part ROM, sediakan sekitar 1,5 GB (405 MB untuk
-   part, 405 MB untuk file ZIP gabungan, dan 145 MB untuk APK NZey Master).
+   untuk ROM utuh, dan 139 MB untuk APK NZey Master hasil repackage
+   (bila belum terpasang). Bila masih memakai 5 part ROM, sediakan
+   sekitar 1,5 GB (405 MB untuk part, 405 MB untuk file ZIP gabungan,
+   dan 139 MB untuk APK NZey Master hasil repackage).
 2. Siapkan ROM utuh yang sudah dimiliki:
    `rom_11_0_0_1036_3281_M27_NZeyMod.zip` (sekitar 405 MB).
    SHA-256 yang benar adalah:
    `1d8e0031a1076b4de7192274fb156a7ab88c97f1eb3b4bf3be98adf2e65c364c`
-3. Jika Virtual Master lama masih terpasang, hapus terlebih dahulu. NZey
-   Master menggunakan tanda tangan yang berbeda, sehingga tidak dapat
-   dipasang menimpa Virtual Master lama.
-4. Pasang NZey Master bila belum terpasang. APK-nya berukuran 145 MB,
-   SHA-256
-   `2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602`.
-   Tautan unduh tercantum di Launcher bagian NZey Master. Launcher tidak
-   mengunduh APK 145 MB tersebut di dalam aplikasi; unduhan dilakukan
-   melalui peramban / aplikasi Unduhan, lalu dipasang dari sana.
+3. Sejak v2.1-beta, Virtual Master lama **tidak perlu dihapus**: NZey
+   Master hasil repackage memakai paket `com.kizakixd.nzeymaster` dan
+   dapat terpasang berdampingan dengan Virtual Master lama. Ini hanya
+   berlaku untuk APK hasil repackage (`NZeyMaster-nzey.apk`, 139 MB).
+   APK paket lama (145 MB) tetap bentrok dan tetap memerlukan uninstall
+   Virtual Master lama terlebih dahulu.
+4. Pasang NZey Master hasil repackage bila belum terpasang. APK-nya
+   `NZeyMaster-nzey.apk`, berukuran 139 MB (144.895.840 byte), SHA-256
+   `224083a8cd2920f67d9c8a67a9f6746afa62820a218d9cb5f7174760a46bb55c`.
+   Tautan / berkas rilis tercantum di Launcher bagian NZey Master.
+   Launcher tidak mengunduh APK tersebut di dalam aplikasi; unduhan
+   dilakukan melalui peramban / aplikasi Unduhan, lalu dipasang dari sana.
 
 ## 2. Jalankan ROM utuh (fitur utama v2)
 
@@ -138,10 +142,11 @@ Keybox yang ada saat ini kedaluwarsa pada 28 November 2026. Setelah tanggal ters
 
 ## 7. Pasang NZey Master dan impor ROM
 
-1. Di bagian NZey Master pada Launcher, periksa apakah NZey Master sudah terpasang.
-2. Jika belum, unduh APK dari tautan resmi yang tercantum di Launcher (145 MB). Periksa SHA-256 APK bila memungkinkan:
-   `2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602`
-3. Pasang APK tersebut (hapus Virtual Master lama terlebih dahulu).
+1. Di bagian NZey Master pada Launcher, periksa apakah NZey Master sudah terpasang. Launcher memeriksa paket baru `com.kizakixd.nzeymaster` terlebih dahulu, lalu paket lama `com.clone.android.dual.space` sebagai fallback.
+2. Jika belum, pasang `NZeyMaster-nzey.apk` hasil repackage (139 MB). Periksa SHA-256 APK bila memungkinkan:
+   `224083a8cd2920f67d9c8a67a9f6746afa62820a218d9cb5f7174760a46bb55c`
+   APK ini dapat terpasang berdampingan dengan Virtual Master lama — tidak perlu uninstall. APK paket lama (145 MB, SHA-256 `2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602`) hanya fallback dan tetap memerlukan uninstall Virtual Master lama.
+3. Pasang APK tersebut.
 4. Impor file ZIP ROM utuh yang sudah diverifikasi ke NZey Master dengan langkah pada bagian 2 di atas.
 5. Salin `identity.json`, `config.prop`, dan `keybox.xml` hasil Launcher ke folder `/sdcard/NZeyMod/` di dalam VM. Cara penyalinan berkas mengikuti fitur berbagi berkas yang disediakan NZey Master.
 6. Nyalakan ulang VM. Pada boot pertama, `nzeymod.sh` memasang modul, menerapkan identitas, dan menulis log ke `/sdcard/NZeyMod/nzeymod.log` di dalam VM.
@@ -157,5 +162,5 @@ Gunakan fitur Cek Kebocoran di dalam VM (aplikasi NZeyMod Identity) untuk pemeri
 - **Import Local ROM tidak menemukan berkas**: pastikan berkas berada di folder `NZeyMod/` dan bernama `rom_11_0_0_1036_3281_M27_NZeyMod.zip`, lalu coba pilih melalui pengelola berkas NZey Master.
 - **Identitas tidak berubah setelah reboot**: periksa `nzeymod.log` di dalam VM dan pastikan `identity.json` berada di `/sdcard/NZeyMod/`.
 - **Modul tidak terpasang**: pastikan folder `/system/nzeymod/modules/` berisi file modul, lalu periksa log boot pertama.
-- **NZey Master tidak dapat dipasang**: pastikan Virtual Master lama sudah dihapus, karena tanda tangan APK berbeda.
+- **NZey Master tidak dapat dipasang**: bila memasang APK paket lama (145 MB), pastikan Virtual Master lama sudah dihapus, karena tanda tangan APK berbeda. Bila memasang `NZeyMaster-nzey.apk` hasil repackage (139 MB, paket `com.kizakixd.nzeymaster`), uninstall tidak diperlukan — APK ini dibuat agar dapat berdampingan dengan Virtual Master lama.
 - **Play Integrity gagal**: periksa masa berlaku keybox dan konfigurasi Play Integrity Fork. STRONG tidak dapat dijamin di VM; lihat `docs/batasan.md`.

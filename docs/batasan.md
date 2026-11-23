@@ -1,4 +1,4 @@
-# Batasan — NZeyMod Launcher v2.0-beta
+# Batasan — NZeyMod Launcher v2.1-beta
 
 Dokumen ini menjelaskan batasan secara jujur, agar tidak ada klaim yang melebihi kemampuan aplikasi dan ROM.
 
@@ -42,9 +42,23 @@ Fitur Cek Kebocoran di Manager memeriksa perangkat host. Hasilnya tidak membukti
 
 ## 8. APK belum diuji di perangkat fisik
 
-APK versi 2.0-beta dibangun dan diverifikasi secara statis di lingkungan pengembangan (tanda tangan, manifest, dan SHA-256). APK belum dipasang dan diuji di perangkat fisik. Pengujian di perangkat POCO X7 Pro masih diperlukan sebelum digunakan secara rutin, terutama alur impor ROM utuh ke NZey Master.
+APK versi 2.1-beta dibangun dan diverifikasi secara statis di lingkungan pengembangan (tanda tangan, manifest, dan SHA-256). APK belum dipasang dan diuji di perangkat fisik. Pengujian di perangkat POCO X7 Pro masih diperlukan sebelum digunakan secara rutin, terutama alur impor ROM utuh ke NZey Master.
 
-## 9. Keamanan berkas
+## 9. NZey Master hasil repackage belum teruji — rename package berisiko
+
+`NZeyMaster-nzey.apk` adalah Virtual Master 3.2.68 hasil repackage: paket diubah dari `com.clone.android.dual.space` menjadi `com.kizakixd.nzeymaster` agar dapat terpasang berdampingan dengan Virtual Master lama tanpa uninstall, dan lib `armeabi-v7a` dibuang (hanya arm64 yang dipertahankan, sesuai POCO X7 Pro). String path paket lama di native lib `libkr*.so` (mis. `/data/data/com.clone.android.dual.space/vm/vm%d/fs`) di-patch ke paket baru dengan panjang berkas yang dipertahankan; tidak ada smali yang diubah, jadi patch VIP dipertahankan.
+
+Risiko yang tersisa dan wajib dites di HP:
+
+- Login server / cloud sync Virtual Master dapat menolak paket baru, karena server dapat memeriksa nama paket atau tanda tangan aplikasi.
+- Provider / FileProvider dan Firebase / Mobile Ads memakai authority berbasis nama paket — sudah diubah di manifest, tetapi perilaku runtime-nya belum teruji.
+- VM dapat gagal booting bila ada path lain yang masih mengarah ke paket lama di dalam native lib atau di dalam ROM yang diimpor.
+- APK hasil repackage hanya untuk perangkat arm64 (POCO X7 Pro). Perangkat ARM 32-bit tidak dapat memakai APK ini karena lib `armeabi-v7a` sudah dibuang.
+- Bila NZey Master hasil repackage gagal jalan, fallback-nya adalah APK paket lama — tetapi APK lama tetap bentrok dengan Virtual Master yang masih terpasang dan memerlukan uninstall terlebih dahulu.
+
+Detail lengkap ada di `nzeymaster/REPACK.md` dan `nzeymaster/REMOVED.md`.
+
+## 10. Keamanan berkas
 
 - `identity.json` berisi identitas perangkat. Jangan dibagikan ke pihak yang tidak dipercaya.
 - `keybox.xml` adalah kredensial sensitif. Jangan dibagikan dan jangan diunggah ke repositori publik.
