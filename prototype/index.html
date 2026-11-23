@@ -61,7 +61,7 @@
   <span class="badge">PROTOTYPE WEB — BUKAN MESIN VIRTUAL</span>
   <h1>NZeyMod Manager</h1>
   <p>Pengelola NZeyMod ROM (Android 11, Pixel 5 / redfin, M27). Prototype ini berjalan sepenuhnya di browser: memilih ROM utuh dari penyimpanan, memverifikasi SHA-256, menggabungkan berkas ROM, membuat identitas acak, menyimpan profil, dan menyiapkan konfigurasi untuk dipakai di dalam NZey Master.</p>
-  <p class="muted">Bahasa: Bahasa Indonesia baku. Versi prototype: 2.0-beta.</p>
+  <p class="muted">Bahasa: Bahasa Indonesia baku. Versi prototype: 2.1-beta.</p>
 </header>
 
 <main>
@@ -75,7 +75,7 @@
       <li><strong>Keybox ECDSA-only dan kedaluwarsa 28 November 2026.</strong> Setelah tanggal tersebut keybox ini tidak lagi dapat diandalkan. Jangan mengandalkan satu keybox saja.</li>
       <li><strong>Cek Kebocoran di prototype ini adalah simulasi di host (browser).</strong> Pemeriksaan nyata hanya dapat dilakukan di dalam VM setelah ROM berjalan.</li>
       <li><strong>Tidak ada ROM yang diunduh oleh halaman ini.</strong> Pengguna harus sudah memiliki ROM utuh (sekitar 405 MB) atau 5 bagian ROM dari sumbernya sendiri. Gunakan bagian “Jalankan ROM (ROM Utuh)” bila ROM utuh sudah dimiliki, atau “Gabung ROM” bila yang dimiliki masih berupa 5 bagian.</li>
-      <li><strong>Virtual Master asli sulit digunakan dan memerlukan premium.</strong> NZey Master adalah remake yang disediakan sebagai alternatif; hapus Virtual Master lama terlebih dahulu karena tanda tangan (signature) berbeda.</li>
+      <li><strong>Virtual Master asli sulit digunakan dan memerlukan premium.</strong> NZey Master adalah remake yang disediakan sebagai alternatif. Sejak v2.1-beta ada NZey Master hasil repackage dengan paket <code>com.kizakixd.nzeymaster</code> yang dapat terpasang berdampingan dengan Virtual Master lama tanpa uninstall. APK paket lama tetap memerlukan uninstall Virtual Master lama terlebih dahulu karena tanda tangan (signature) berbeda.</li>
     </ul>
   </div>
 
@@ -100,7 +100,7 @@
     <div id="wholeRomImportSteps" style="display:none">
       <h3>Langkah impor ke NZey Master</h3>
       <ol>
-        <li>Pasang NZey Master bila belum terpasang (lihat bagian 7). Hapus Virtual Master lama terlebih dahulu karena tanda tangannya berbeda.</li>
+        <li>Pasang NZey Master hasil repackage (<code>NZeyMaster-nzey.apk</code>, paket <code>com.kizakixd.nzeymaster</code>) bila belum terpasang (lihat bagian 7). APK ini dapat berdampingan dengan Virtual Master lama tanpa uninstall.</li>
         <li>Simpan berkas ROM utuh di folder <code>NZeyMod/</code> di penyimpanan (tombol “Siapkan untuk Impor” mengunduh salinan dengan nama yang benar).</li>
         <li>Buka NZey Master.</li>
         <li>Tap tombol <strong>+</strong> (Tambah), lalu tap titik tiga (⋮).</li>
@@ -109,7 +109,7 @@
         <li>Tunggu instalasi ROM selesai, lalu jalankan VM. Pada boot pertama, <code>nzeymod.sh</code> memasang modul dan menerapkan identitas.</li>
       </ol>
       <p class="muted small">Catatan: di browser, tombol di bawah ini hanya membuka tautan unduh NZey Master. Peluncuran aplikasi NZey Master hanya dapat dilakukan dari APK Manager di perangkat Android.</p>
-      <p><a href="https://129.226.154.152.sslip.io/download/NZeyMaster.apk"><button type="button" class="info">Buka / Unduh NZey Master (145 MB)</button></a></p>
+      <p><a href="https://129.226.154.152.sslip.io/download/NZeyMaster.apk"><button type="button" class="info">Unduh NZey Master paket lama (145 MB)</button></a></p>
     </div>
     <p class="muted small">Catatan: verifikasi SHA-256 dilakukan lokal di browser menggunakan File API dan <code>crypto.subtle.digest</code>. Berkas tidak diunggah ke server mana pun. Berkas sebesar 405 MB membutuhkan waktu beberapa saat dan memori yang cukup.</p>
   </section>
@@ -250,22 +250,24 @@
     <table>
       <tbody>
         <tr><th>Nama</th><td>NZey Master (Virtual Master 3.2.68 remake)</td></tr>
-        <tr><th>Paket</th><td><code>com.clone.android.dual.space</code></td></tr>
-        <tr><th>Ukuran APK</th><td>145 MB</td></tr>
-        <tr><th>SHA-256 APK</th><td><code>2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602</code></td></tr>
-        <tr><th>Unduhan</th><td><a href="https://129.226.154.152.sslip.io/download/NZeyMaster.apk">https://129.226.154.152.sslip.io/download/NZeyMaster.apk</a></td></tr>
+        <tr><th>Paket (repackage, v2.1-beta)</th><td><code>com.kizakixd.nzeymaster</code> — dapat terpasang berdampingan dengan Virtual Master lama tanpa uninstall</td></tr>
+        <tr><th>Paket (lama, fallback)</th><td><code>com.clone.android.dual.space</code></td></tr>
+        <tr><th>Ukuran APK (repackage)</th><td>139 MB (144.895.840 byte, arm64 saja)</td></tr>
+        <tr><th>SHA-256 APK (repackage)</th><td><code>224083a8cd2920f67d9c8a67a9f6746afa62820a218d9cb5f7174760a46bb55c</code></td></tr>
+        <tr><th>Ukuran APK (lama)</th><td>145 MB</td></tr>
+        <tr><th>SHA-256 APK (lama)</th><td><code>2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602</code></td></tr>
+        <tr><th>Unduhan (lama)</th><td><a href="https://129.226.154.152.sslip.io/download/NZeyMaster.apk">https://129.226.154.152.sslip.io/download/NZeyMaster.apk</a></td></tr>
       </tbody>
     </table>
     <div class="warnbox" style="margin-top:12px">
-      <strong>Penting:</strong> Hapus Virtual Master lama terlebih dahulu sebelum memasang NZey Master, karena tanda tangan (signature) keduanya berbeda dan pemasangan dapat gagal bila aplikasi lama masih terpasang.
+      <strong>Penting:</strong> Pasang <code>NZeyMaster-nzey.apk</code> hasil repackage (paket <code>com.kizakixd.nzeymaster</code>, 139 MB) — APK ini dapat terpasang berdampingan dengan Virtual Master lama tanpa uninstall. APK paket lama (145 MB) tetap memerlukan uninstall Virtual Master lama terlebih dahulu, karena tanda tangan (signature) keduanya berbeda. Repackage ini belum teruji di perangkat fisik: rename package dapat merusak login server / cloud sync, jadi wajib dites di HP.
     </div>
     <p>
       <a href="https://129.226.154.152.sslip.io/download/NZeyMaster.apk"><button type="button" class="info">Unduh NZeyMaster.apk (145 MB)</button></a>
     </p>
     <h3>Langkah singkat</h3>
     <ol>
-      <li>Hapus Virtual Master lama (bila ada).</li>
-      <li>Pasang NZeyMaster.apk dan verifikasi SHA-256 di atas.</li>
+      <li>Pasang <code>NZeyMaster-nzey.apk</code> hasil repackage dan verifikasi SHA-256 di atas. APK ini tidak memerlukan uninstall Virtual Master lama.</li>
       <li>Bila ROM utuh sudah dimiliki, verifikasi di bagian 0 (Jalankan ROM), lalu impor berkas tersebut ke NZey Master (+ &gt; titik tiga &gt; Import Local ROM). Bila yang dimiliki masih 5 bagian, gabungkan dahulu di bagian 1, lalu impor berkas hasil gabungan.</li>
       <li>Buat identitas di bagian 2, simpan sebagai profil di bagian 3, lalu terapkan di dalam VM.</li>
       <li>Atur Magisk dan keybox (bagian 4–5) sebelum menjalankan aplikasi yang sensitif.</li>
