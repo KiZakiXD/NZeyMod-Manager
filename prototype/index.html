@@ -60,8 +60,8 @@
 <header>
   <span class="badge">PROTOTYPE WEB — BUKAN MESIN VIRTUAL</span>
   <h1>NZeyMod Manager</h1>
-  <p>Pengelola NZeyMod ROM (Android 11, Pixel 5 / redfin, M27). Prototype ini berjalan sepenuhnya di browser: menggabungkan berkas ROM, membuat identitas acak, menyimpan profil, dan menyiapkan konfigurasi untuk dipakai di dalam NZey Master.</p>
-  <p class="muted">Bahasa: Bahasa Indonesia baku. Versi prototype: 1.0-beta.</p>
+  <p>Pengelola NZeyMod ROM (Android 11, Pixel 5 / redfin, M27). Prototype ini berjalan sepenuhnya di browser: memilih ROM utuh dari penyimpanan, memverifikasi SHA-256, menggabungkan berkas ROM, membuat identitas acak, menyimpan profil, dan menyiapkan konfigurasi untuk dipakai di dalam NZey Master.</p>
+  <p class="muted">Bahasa: Bahasa Indonesia baku. Versi prototype: 2.0-beta.</p>
 </header>
 
 <main>
@@ -69,14 +69,50 @@
   <div class="warnbox" id="keterbatasan">
     <h2>Kejujuran dan Batasan — Harap Dibaca Dahulu</h2>
     <ul>
-      <li><strong>Manager ini BUKAN mesin virtual (VM).</strong> ROM tetap berjalan di dalam aplikasi NZey Master (Virtual Master 3.2.68 remake). Manager ini hanya menyiapkan berkas dan konfigurasi.</li>
+      <li><strong>Manager ini BUKAN mesin virtual (VM).</strong> ROM tetap berjalan di dalam aplikasi NZey Master (Virtual Master 3.2.68 remake). Manager ini hanya menyiapkan berkas dan konfigurasi, lalu meluncurkan NZey Master.</li>
+      <li><strong>ROM utuh sudah dimiliki pengguna.</strong> Bila sudah memiliki berkas ROM utuh (<code>rom_11_0_0_1036_3281_M27_NZeyMod.zip</code>, sekitar 405 MB), gunakan bagian “Jalankan ROM (ROM Utuh)” di bawah. Menggabungkan 5 bagian ROM hanya diperlukan bila yang dimiliki masih berupa bagian terpisah.</li>
       <li><strong>Play Integrity STRONG tidak dijamin.</strong> Hasil STRONG bergantung pada keybox, fingerprint, dan kondisi perangkat/VM. Tidak ada jaminan lolos STRONG.</li>
       <li><strong>Keybox ECDSA-only dan kedaluwarsa 28 November 2026.</strong> Setelah tanggal tersebut keybox ini tidak lagi dapat diandalkan. Jangan mengandalkan satu keybox saja.</li>
       <li><strong>Cek Kebocoran di prototype ini adalah simulasi di host (browser).</strong> Pemeriksaan nyata hanya dapat dilakukan di dalam VM setelah ROM berjalan.</li>
-      <li><strong>Tidak ada ROM yang diunduh oleh halaman ini.</strong> Pengguna harus sudah memiliki 5 bagian ROM dari sumbernya sendiri, lalu menggabungkannya di bagian Gabung ROM.</li>
+      <li><strong>Tidak ada ROM yang diunduh oleh halaman ini.</strong> Pengguna harus sudah memiliki ROM utuh (sekitar 405 MB) atau 5 bagian ROM dari sumbernya sendiri. Gunakan bagian “Jalankan ROM (ROM Utuh)” bila ROM utuh sudah dimiliki, atau “Gabung ROM” bila yang dimiliki masih berupa 5 bagian.</li>
       <li><strong>Virtual Master asli sulit digunakan dan memerlukan premium.</strong> NZey Master adalah remake yang disediakan sebagai alternatif; hapus Virtual Master lama terlebih dahulu karena tanda tangan (signature) berbeda.</li>
     </ul>
   </div>
+
+  <!-- (0) Jalankan ROM utuh -->
+  <section id="jalankan-rom">
+    <h2>0. Jalankan ROM (ROM Utuh) — Utama</h2>
+    <p><span class="badge">UTAMA — BILA ROM UTUH SUDAH DIMILIKI</span></p>
+    <p>Pilih berkas ROM utuh dari penyimpanan, verifikasi SHA-256, lalu siapkan untuk diimpor ke NZey Master. <strong>Prototype ini dan APK Manager bukan mesin virtual</strong> — ROM tetap dijalankan oleh NZey Master. Di browser, pemasangan NZey Master tidak dapat dideteksi; periksa pemasangannya di APK Manager atau di pengaturan perangkat.</p>
+    <p class="muted">Berkas yang diharapkan: <code>rom_11_0_0_1036_3281_M27_NZeyMod.zip</code> &nbsp;|&nbsp; Ukuran sekitar 405 MB (diterima 380–430 MB)<br>
+    Nama berkas dan folder sumber bebas — berkas dapat dipilih dari folder mana pun di penyimpanan. Verifikasi berdasarkan isi berkas (SHA-256), bukan nama berkas.<br>
+    SHA-256 yang diharapkan:<br><code>1d8e0031a1076b4de7192274fb156a7ab88c97f1eb3b4bf3be98adf2e65c364c</code></p>
+    <label for="wholeRomFile">Pilih ROM utuh (berkas apa pun, dari folder mana pun di penyimpanan)</label>
+    <input type="file" id="wholeRomFile">
+    <div>
+      <button id="btnVerifyWholeRom">Verifikasi ROM Utuh</button>
+      <button id="btnPrepareWholeRom" class="secondary" disabled>Siapkan untuk Impor (Unduh Salinan)</button>
+    </div>
+    <div id="wholeRomFileInfo" class="muted small"></div>
+    <h3>Hasil verifikasi</h3>
+    <div id="wholeRomResult" class="kv">Belum ada berkas yang dipilih. Pilih ROM utuh, lalu tekan “Verifikasi ROM Utuh”.</div>
+    <p><span id="wholeRomStatus" class="status idle">MENUNGGU</span></p>
+    <div id="wholeRomImportSteps" style="display:none">
+      <h3>Langkah impor ke NZey Master</h3>
+      <ol>
+        <li>Pasang NZey Master bila belum terpasang (lihat bagian 7). Hapus Virtual Master lama terlebih dahulu karena tanda tangannya berbeda.</li>
+        <li>Simpan berkas ROM utuh di folder <code>NZeyMod/</code> di penyimpanan (tombol “Siapkan untuk Impor” mengunduh salinan dengan nama yang benar).</li>
+        <li>Buka NZey Master.</li>
+        <li>Tap tombol <strong>+</strong> (Tambah), lalu tap titik tiga (⋮).</li>
+        <li>Pilih <strong>Import Local ROM</strong>.</li>
+        <li>Pilih berkas <code>rom_11_0_0_1036_3281_M27_NZeyMod.zip</code> dari folder <code>NZeyMod/</code>.</li>
+        <li>Tunggu instalasi ROM selesai, lalu jalankan VM. Pada boot pertama, <code>nzeymod.sh</code> memasang modul dan menerapkan identitas.</li>
+      </ol>
+      <p class="muted small">Catatan: di browser, tombol di bawah ini hanya membuka tautan unduh NZey Master. Peluncuran aplikasi NZey Master hanya dapat dilakukan dari APK Manager di perangkat Android.</p>
+      <p><a href="https://129.226.154.152.sslip.io/download/NZeyMaster.apk"><button type="button" class="info">Buka / Unduh NZey Master (145 MB)</button></a></p>
+    </div>
+    <p class="muted small">Catatan: verifikasi SHA-256 dilakukan lokal di browser menggunakan File API dan <code>crypto.subtle.digest</code>. Berkas tidak diunggah ke server mana pun. Berkas sebesar 405 MB membutuhkan waktu beberapa saat dan memori yang cukup.</p>
+  </section>
 
   <!-- (a) Gabung ROM -->
   <section id="gabung-rom">
@@ -230,7 +266,7 @@
     <ol>
       <li>Hapus Virtual Master lama (bila ada).</li>
       <li>Pasang NZeyMaster.apk dan verifikasi SHA-256 di atas.</li>
-      <li>Gabungkan ROM di bagian 1, lalu impor berkas hasil gabungan ke NZey Master.</li>
+      <li>Bila ROM utuh sudah dimiliki, verifikasi di bagian 0 (Jalankan ROM), lalu impor berkas tersebut ke NZey Master (+ &gt; titik tiga &gt; Import Local ROM). Bila yang dimiliki masih 5 bagian, gabungkan dahulu di bagian 1, lalu impor berkas hasil gabungan.</li>
       <li>Buat identitas di bagian 2, simpan sebagai profil di bagian 3, lalu terapkan di dalam VM.</li>
       <li>Atur Magisk dan keybox (bagian 4–5) sebelum menjalankan aplikasi yang sensitif.</li>
     </ol>
@@ -361,6 +397,92 @@ function setStatus(el, text, kind) {
 function escapeHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
+/* ---------- (0) Jalankan ROM utuh ---------- */
+var WHOLE_ROM_MIN_BYTES = 380 * 1024 * 1024;
+var WHOLE_ROM_MAX_BYTES = 430 * 1024 * 1024;
+var wholeRomFile = null;
+var wholeRomVerified = false;
+var wholeRomSha = '';
+
+function showWholeRomFileInfo() {
+  var f = $('wholeRomFile').files && $('wholeRomFile').files[0];
+  wholeRomFile = f || null;
+  wholeRomVerified = false;
+  wholeRomSha = '';
+  $('btnPrepareWholeRom').disabled = true;
+  $('wholeRomImportSteps').style.display = 'none';
+  if (!f) {
+    $('wholeRomFileInfo').textContent = '';
+    $('wholeRomResult').textContent = 'Belum ada berkas yang dipilih. Pilih ROM utuh, lalu tekan “Verifikasi ROM Utuh”.';
+    setStatus($('wholeRomStatus'), 'MENUNGGU', 'idle');
+    return;
+  }
+  var sizeMb = (f.size / 1048576).toFixed(2);
+  var sizeOk = f.size >= WHOLE_ROM_MIN_BYTES && f.size <= WHOLE_ROM_MAX_BYTES;
+  var isPart = /\.part\d+$/i.test(f.name);
+  var lines = 'Nama berkas: ' + f.name + '\nUkuran: ' + sizeMb + ' MB (' + f.size + ' byte) — diharapkan sekitar 405 MB (380–430 MB): ' + (sizeOk ? 'sesuai' : 'DI LUAR RENTANG') + (isPart ? '\nPERINGATAN: nama berkas berakhiran .part — ini tampak seperti bagian ROM terpisah, bukan ROM utuh.' : '');
+  $('wholeRomFileInfo').textContent = lines;
+  $('wholeRomResult').textContent = 'Berkas dipilih. Tekan “Verifikasi ROM Utuh” untuk menghitung SHA-256.';
+  setStatus($('wholeRomStatus'), 'MENUNGGU VERIFIKASI', 'idle');
+}
+$('wholeRomFile').addEventListener('change', showWholeRomFileInfo);
+
+$('btnVerifyWholeRom').addEventListener('click', function () {
+  var f = wholeRomFile;
+  if (!f) {
+    $('wholeRomResult').textContent = 'Pilih ROM utuh terlebih dahulu.';
+    setStatus($('wholeRomStatus'), 'GAGAL — TIDAK ADA BERKAS', 'bad');
+    return;
+  }
+  $('wholeRomResult').textContent = 'Menghitung SHA-256 untuk ' + f.name + ' (' + (f.size / 1048576).toFixed(2) + ' MB)… Berkas besar membutuhkan waktu beberapa saat.';
+  setStatus($('wholeRomStatus'), 'MEMPROSES…', 'idle');
+  $('btnVerifyWholeRom').disabled = true;
+  f.arrayBuffer().then(function (buf) {
+    return window.crypto.subtle.digest('SHA-256', buf).then(function (hash) {
+      var hex = bufToHex(hash);
+      wholeRomSha = hex;
+      var sizeOk = f.size >= WHOLE_ROM_MIN_BYTES && f.size <= WHOLE_ROM_MAX_BYTES;
+      var hashOk = hex === EXPECTED_ROM_SHA256;
+      var ok = sizeOk && hashOk;
+      wholeRomVerified = ok;
+      var lines = [];
+      lines.push('Nama berkas      : ' + f.name);
+      lines.push('Ukuran           : ' + (f.size / 1048576).toFixed(2) + ' MB (' + f.size + ' byte) — diharapkan sekitar 405 MB (380–430 MB): ' + (sizeOk ? 'sesuai' : 'DI LUAR RENTANG'));
+      lines.push('SHA-256 terhitung : ' + hex);
+      lines.push('SHA-256 diharapkan: ' + EXPECTED_ROM_SHA256);
+      lines.push('Status           : ' + (ok ? 'LOLOS — ROM utuh terverifikasi. Lanjutkan ke langkah impor di bawah.' : 'GAGAL — impor ditolak.'));
+      if (!ok) {
+        lines.push('');
+        lines.push('Kemungkinan penyebab:');
+        if (!hashOk) lines.push('- Berkas rusak / corrupt saat diunduh atau disalin.');
+        if (!hashOk) lines.push('- Berkas ini bukan ROM NZeyMod utuh (nama atau isi berbeda).');
+        if (/\.part\d+$/i.test(f.name)) lines.push('- Berkas ini masih berupa bagian ROM terpisah (.part00–.part04). Gabungkan dahulu di bagian 1 (Gabung ROM).');
+        if (!sizeOk) lines.push('- Ukuran berkas jauh dari 405 MB: kemungkinan berkas terpotong, belum selesai diunduh, atau bukan ROM ini.');
+        lines.push('Periksa kembali sumber berkas, unduh / salin ulang, lalu verifikasi lagi. Jangan mengimpor berkas yang gagal verifikasi.');
+      }
+      $('wholeRomResult').textContent = lines.join('\n');
+      setStatus($('wholeRomStatus'), ok ? 'LOLOS' : 'GAGAL — IMPOR DITOLAK', ok ? 'ok' : 'bad');
+      $('btnPrepareWholeRom').disabled = !ok;
+      $('wholeRomImportSteps').style.display = ok ? 'block' : 'none';
+      $('btnVerifyWholeRom').disabled = false;
+    });
+  }).catch(function (err) {
+    $('wholeRomResult').textContent = 'Terjadi kesalahan saat menghitung SHA-256: ' + err.message;
+    setStatus($('wholeRomStatus'), 'GAGAL', 'bad');
+    $('btnVerifyWholeRom').disabled = false;
+  });
+});
+
+$('btnPrepareWholeRom').addEventListener('click', function () {
+  if (!wholeRomFile || !wholeRomVerified) {
+    alert('Verifikasi ROM utuh terlebih dahulu hingga LOLOS.');
+    return;
+  }
+  downloadBlob(wholeRomFile, JOINED_FILENAME);
+  $('wholeRomResult').textContent = $('wholeRomResult').textContent +
+    '\n\nSalinan disiapkan: simpan berkas yang diunduh sebagai ' + JOINED_FILENAME + ' di folder NZeyMod/ di penyimpanan, lalu impor dari NZey Master (+ > titik tiga > Import Local ROM).';
+});
 
 /* ---------- (a) Gabung ROM ---------- */
 function listRomFiles() {
