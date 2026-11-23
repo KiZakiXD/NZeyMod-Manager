@@ -43,12 +43,17 @@ Yang dilakukan Launcher:
 5. **Profil Magisk** — mengatur modul Magisk ON / OFF per profil
    (Zygisk Next, Play Integrity Fork, Shamiko, LSPosed, Tricky Store).
 6. **Ganti keybox** — mengganti keybox dan memeriksa masa berlakunya.
-7. **Buka NZey Master** — meluncurkan paket `com.clone.android.dual.space`.
-   Bila belum terpasang, Launcher menampilkan tautan unduh APK NZey Master
-   (± 145 MB, SHA-256
+7. **Buka NZey Master** — meluncurkan paket baru `com.kizakixd.nzeymaster`
+   (hasil repackage v2.1-beta, dapat terpasang berdampingan dengan
+   Virtual Master lama tanpa uninstall). Bila paket baru belum terpasang,
+   Launcher mencoba paket lama `com.clone.android.dual.space` sebagai
+   fallback. Bila keduanya belum terpasang, Launcher mengarahkan ke
+   `NZeyMaster-nzey.apk` hasil repackage (± 139 MB, SHA-256
+   `224083a8cd2920f67d9c8a67a9f6746afa62820a218d9cb5f7174760a46bb55c`).
+   APK paket lama (± 145 MB, SHA-256
    `2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602`)
-   dan peringatan untuk menghapus Virtual Master lama terlebih dahulu,
-   karena tanda tangannya berbeda.
+   hanya dipakai sebagai fallback dan tetap memerlukan uninstall
+   Virtual Master lama terlebih dahulu, karena tanda tangannya berbeda.
 
 NZeyMod Launcher adalah aplikasi pendamping untuk ROM NZeyMod dari
 repositori `KiZakiXD/nzeymod-rom` (repositori privat). ROM ini hanya
@@ -71,7 +76,30 @@ Master.
 
 ## APK yang sudah dibangun
 
-### v2.0-beta (terbaru)
+### v2.1-beta (terbaru)
+
+- `NZeyMod-Manager-v2.1-beta.apk` — 46.375 byte (46 KB), paket
+  `com.kizakixd.nzeymodmanager`, versi 2.1-beta (versionCode 3), minSdk 26,
+  targetSdk 34, label NZeyMod Launcher.
+- SHA-256: `ec47c87d6e3a6e3846dd58be01b6ea669863886f913ddd42bba8e4a4b1978da4`
+- Terverifikasi dengan `apksigner verify`: skema v2 dan v3, 1 penanda tangan.
+- Perubahan utama: Launcher meluncurkan NZey Master paket baru
+  `com.kizakixd.nzeymaster` (hasil repackage, lihat `nzeymaster/REPACK.md`),
+  dengan fallback ke paket lama `com.clone.android.dual.space`.
+- NZey Master hasil repackage: `NZeyMaster-nzey.apk` — 144.895.840 byte
+  (139 MB), paket `com.kizakixd.nzeymaster`, versi 3.2.68 (versionCode 3268),
+  SHA-256 `224083a8cd2920f67d9c8a67a9f6746afa62820a218d9cb5f7174760a46bb55c`,
+  `apksigner verify` lolos v1/v2/v3. APK asli 151.323.409 byte (145 MB),
+  SHA-256 `2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602`.
+  Yang dibuang hanya lib `armeabi-v7a` (13,8 MB, tidak dipakai POCO X7 Pro
+  arm64); string path paket lama di native lib `libkr*.so` di-patch ke
+  paket baru. Patch VIP dan rebranding NZey Master dipertahankan
+  (tidak ada smali yang diubah).
+- **Keduanya belum diuji di perangkat fisik** — hanya verifikasi statis.
+  Rename package dapat merusak login server / cloud sync / provider
+  Virtual Master, jadi wajib dites di HP sebelum dipakai rutin.
+
+### v2.0-beta
 
 - `NZeyMod-Manager-v2.0-beta.apk` — 46.375 byte (46 KB), paket
   `com.kizakixd.nzeymodmanager`, versi 2.0-beta (versionCode 2), minSdk 26,
@@ -91,7 +119,7 @@ Master.
 - SHA-256: `d6e6f82587eab4920fb1c245bdc1cc3a0ae110c5dd566aaf8925d6009e5acec4`
 - Terverifikasi dengan `apksigner verify`: skema v2 dan v3, 1 penanda tangan.
 
-## Mencoba v2.0-beta
+## Mencoba v2.1-beta
 
 1. Salin APK ke HP (POCO X7 Pro).
 2. Di HP, izinkan instalasi dari sumber tidak dikenal.
