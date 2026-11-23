@@ -67,11 +67,20 @@ public class MainActivity extends Activity {
             "rom_11_0_0_1036_3281_M27_NZeyMod.zip";
     private static final long WHOLE_ROM_MIN_BYTES = 380L * 1024L * 1024L;
     private static final long WHOLE_ROM_MAX_BYTES = 430L * 1024L * 1024L;
-    private static final String NZEY_PACKAGE = "com.clone.android.dual.space";
+    // NZey Master hasil repackage (v2.1-beta): paket baru agar dapat
+    // terpasang berdampingan dengan Virtual Master lama, tanpa uninstall.
+    // Paket lama tetap didukung sebagai fallback.
+    private static final String NZEY_PACKAGE = "com.kizakixd.nzeymaster";
+    private static final String NZEY_PACKAGE_LEGACY = "com.clone.android.dual.space";
     private static final String NZEY_VERSION = "3.2.68";
     private static final String NZEY_DOWNLOAD_URL =
             "https://129.226.154.152.sslip.io/download/NZeyMaster.apk";
+    // SHA-256 NZeyMaster-nzey.apk hasil repackage (139 MB, 144.895.840 byte,
+    // arm64 saja, tanpa lib armeabi-v7a).
     private static final String NZEY_SHA256 =
+            "224083a8cd2920f67d9c8a67a9f6746afa62820a218d9cb5f7174760a46bb55c";
+    // SHA-256 APK asli (paket lama, 145 MB) — hanya untuk referensi fallback.
+    private static final String NZEY_SHA256_LEGACY =
             "2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602";
 
     private static final String[] IMEI_TACS = {
@@ -931,19 +940,27 @@ public class MainActivity extends Activity {
 
     private void launchNzeyMaster() {
         PackageManager pm = getPackageManager();
+        // Utama: paket baru hasil repackage; fallback: paket lama.
         Intent launch = pm.getLaunchIntentForPackage(NZEY_PACKAGE);
+        String usedPackage = NZEY_PACKAGE;
+        if (launch == null) {
+            launch = pm.getLaunchIntentForPackage(NZEY_PACKAGE_LEGACY);
+            usedPackage = NZEY_PACKAGE_LEGACY;
+        }
         if (launch == null) {
             tvNzeyInstalled.setText("Status pemasangan: belum terinstal. "
-                    + "Unduh NZey Master " + NZEY_VERSION + " (145 MB, SHA-256 "
-                    + NZEY_SHA256 + ") lalu pasang. "
-                    + "Hapus Virtual Master lama terlebih dahulu karena "
-                    + "tanda tangannya berbeda.");
-            toast("NZey Master belum terpasang — unduh terlebih dahulu");
+                    + "Pasang NZeyMaster-nzey.apk hasil repackage " + NZEY_VERSION
+                    + " (139 MB, SHA-256 " + NZEY_SHA256 + "). "
+                    + "Paket barunya " + NZEY_PACKAGE + ", jadi dapat terpasang "
+                    + "berdampingan dengan Virtual Master lama tanpa uninstall. "
+                    + "Tautan unduh di bawah ini masih mengarah ke APK paket lama "
+                    + "(145 MB, SHA-256 " + NZEY_SHA256_LEGACY + ") sebagai fallback.");
+            toast("NZey Master belum terpasang — pasang NZeyMaster-nzey.apk dahulu");
             return;
         }
         launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(launch);
-        toast("Membuka NZey Master — impor ROM lewat + > titik tiga > Import Local ROM");
+        toast("Membuka NZey Master (" + usedPackage + ") — impor ROM lewat + > titik tiga > Import Local ROM");
     }
 
     // ------------------------------------------------------------------
@@ -1287,26 +1304,56 @@ public class MainActivity extends Activity {
 
     private void checkNzeyInstalled() {
         PackageManager pm = getPackageManager();
+        String foundPackage = installedPackage(pm, NZEY_PACKAGE);
+        if (foundPackage == null) {
+            foundPackage = installedPackage(pm, NZEY_PACKAGE_LEGACY);
+        }
+        if (foundPackage != null) {
+            String installedVersion = installedVersion(pm, foundPackage);
+            tvNzeyInstalled.setText("Status pemasangan: terinstal (versi "
+                    + installedVersion + ", paket " + foundPackage + "). "
+                    + "Versi yang diharapkan: " + NZEY_VERSION + ". "
+                    + (NZEY_PACKAGE.equals(foundPackage)
+                            ? "Ini paket baru hasil repackage — dapat berdampingan dengan Virtual Master lama."
+                            : "Ini paket lama — tetap dapat dipakai sebagai fallback."));
+            return;
+        }
+        tvNzeyInstalled.setText("Status pemasangan: belum terinstal. "
+                + "Pasang NZeyMaster-nzey.apk hasil repackage " + NZEY_VERSION
+                + " (139 MB, SHA-256 " + NZEY_SHA256 + "). "
+                + "Paket barunya " + NZEY_PACKAGE + ", jadi dapat terpasang "
+                + "berdampingan dengan Virtual Master lama tanpa uninstall.");
+    }
+
+    /** Mengembalikan nama paket bila terpasang, atau null bila tidak ada. */
+    private String installedPackage(PackageManager pm, String pkg) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                pm.getPackageInfo(pkg, PackageManager.PackageInfoFlags.of(0));
+            } else {
+                @SuppressWarnings("deprecation")
+                PackageInfo legacy = pm.getPackageInfo(pkg, 0);
+            }
+            return pkg;
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
+        }
+    }
+
+    /** Mengembalikan versionName paket yang terpasang, atau "?" bila gagal. */
+    private String installedVersion(PackageManager pm, String pkg) {
         try {
             PackageInfo info;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                info = pm.getPackageInfo(NZEY_PACKAGE,
-                        PackageManager.PackageInfoFlags.of(0));
+                info = pm.getPackageInfo(pkg, PackageManager.PackageInfoFlags.of(0));
             } else {
                 @SuppressWarnings("deprecation")
-                PackageInfo legacy = pm.getPackageInfo(NZEY_PACKAGE, 0);
+                PackageInfo legacy = pm.getPackageInfo(pkg, 0);
                 info = legacy;
             }
-            String installedVersion = info.versionName == null ? "?" : info.versionName;
-            tvNzeyInstalled.setText("Status pemasangan: terinstal (versi "
-                    + installedVersion + ", paket " + NZEY_PACKAGE + "). "
-                    + "Versi yang diharapkan: " + NZEY_VERSION + ".");
+            return info.versionName == null ? "?" : info.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            tvNzeyInstalled.setText("Status pemasangan: belum terinstal. "
-                    + "Unduh NZey Master " + NZEY_VERSION + " (145 MB, SHA-256 "
-                    + NZEY_SHA256 + ") lalu pasang. "
-                    + "Hapus Virtual Master lama terlebih dahulu karena "
-                    + "tanda tangannya berbeda.");
+            return "?";
         }
     }
 
