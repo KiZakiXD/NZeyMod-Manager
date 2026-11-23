@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NZeyMod Manager</string>
+    <string name="subtitle">Pengelola identitas, profil, ROM, dan modul NZeyMod</string>
+
+    <string name="section_identity">Identitas Perangkat</string>
+    <string name="section_profiles">Profil Tersimpan</string>
+    <string name="section_rom">Gabung ROM (5 Bagian)</string>
+    <string name="section_magisk">Profil Magisk</string>
+    <string name="section_keybox">Keybox</string>
+    <string name="section_leak">Pemeriksaan Kebocoran (Host)</string>
+    <string name="section_nzey">NZey Master</string>
+    <string name="section_honesty">Catatan Kejujuran</string>
+
+    <string name="btn_generate">Buat Identitas Baru</string>
+    <string name="btn_save_identity">Simpan identity.json dan config.prop</string>
+    <string name="btn_share_identity">Bagikan Identitas</string>
+    <string name="label_operator_mode">Mode operator</string>
+    <string name="label_android_id">Android ID</string>
+    <string name="label_serial">Serial</string>
+    <string name="label_imei">IMEI</string>
+    <string name="label_operator">Operator</string>
+    <string name="hint_profile_name">Nama profil, contoh: Shopee Utama</string>
+    <string name="btn_save_profile">Simpan Profil</string>
+    <string name="btn_load_profile">Muat Profil</string>
+    <string name="btn_delete_profile">Hapus Profil</string>
+    <string name="btn_refresh_profiles">Muat Ulang Daftar</string>
+    <string name="btn_pick_parts">Pilih Bagian ROM (bisa banyak)</string>
+    <string name="btn_pick_output">Pilih File Keluaran dan Gabung</string>
+    <string name="btn_pick_keybox">Pilih File Keybox (.xml)</string>
+    <string name="btn_leak_check">Jalankan Pemeriksaan</string>
+    <string name="btn_download_nzey">Unduh NZey Master (145 MB)</string>
+    <string name="btn_check_nzey">Periksa Apakah Terinstal</string>
+
+    <string name="honesty_text">Catatan kejujuran:\n• Play Integrity STRONG tidak dijamin di dalam mesin virtual (VM).\n• IMEI pada Android 11 bersifat best-effort; sistem membatasi akses pengenal perangkat.\n• Shopee secara resmi melarang emulator dan VM dalam ketentuan layanannya. Penggunaan VM berisiko dibatasi atau diblokir oleh Shopee.\n• Aplikasi ini BUKAN mesin virtual. Aplikasi ini hanya pengelola identitas, profil, ROM, dan modul untuk NZey Master.</string>
+    <string name="nzey_info_text">Paket: com.clone.android.dual.space\nVersi: 3.2.68\nUkuran: 145 MB\nSHA-256: 2d70516e1f7bd85ca105341b8bd13760fe7484d6b1983e0446a436253d90c602\n\nPeringatan: hapus Virtual Master lama terlebih dahulu sebelum memasang NZey Master, karena tanda tangan (signature) keduanya berbeda.</string>
+    <string name="keybox_warning">Keybox ini hanya ECDSA dan kedaluwarsa pada 28 Nov 2026. Setelah tanggal tersebut, keybox perlu diganti.</string>
+    <string name="magisk_off_text">Magisk NONAKTIF: bersih, tanpa root dan tanpa modul.</string>
+    <string name="magisk_on_text">Magisk AKTIF: modul berikut akan dipasang di dalam VM saat pertama kali boot oleh nzeymod.sh. Modul TIDAK disertakan di dalam APK ini.</string>
+    <string name="modules_text">• Zygisk Next v1.2.8\n• Play Integrity Fork v18.4.1\n• Shamiko v1.2.1\n• LSPosed v1.10.1-7244\n• Tricky Store v1.3.0\n• Hide My Applist v3.7.0\n• Clone App Pro v1.0.0</string>
+    <string name="denylist_text">DenyList:\n• com.shopee.id\n• com.shopee.tw\n• com.shopee.ph\n• com.shopee.vn\n• com.shopee.my\n• com.shopee.sg\n• com.shopee.br\n• com.shopee.co.id\n• com.clone.app.pro</string>
+    <string name="rom_expected_text">SHA-256 yang diharapkan: 1d8e0031a1076b4de7192274fb156a7ab88c97f1eb3b4bf3be98adf2e65c364c</string>
+    <string name="not_generated">Belum dibuat</string>
+    <string name="no_parts">Belum ada bagian yang dipilih</string>
+    <string name="no_profiles">Belum ada profil tersimpan</string>
+
+    <string-array name="operator_modes">
+        <item>acak</item>
+        <item>telkomsel</item>
+        <item>indosat</item>
+        <item>xl</item>
+        <item>axis</item>
+        <item>tri</item>
+        <item>smartfren</item>
+    </string-array>
+</resources>
