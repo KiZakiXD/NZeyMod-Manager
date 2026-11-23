@@ -59,9 +59,14 @@ public class MainActivity extends Activity {
     private static final int REQ_PICK_PARTS = 101;
     private static final int REQ_PICK_OUTPUT = 102;
     private static final int REQ_PICK_KEYBOX = 103;
+    private static final int REQ_PICK_WHOLE_ROM = 104;
 
     private static final String EXPECTED_ROM_SHA256 =
             "1d8e0031a1076b4de7192274fb156a7ab88c97f1eb3b4bf3be98adf2e65c364c";
+    private static final String WHOLE_ROM_FILENAME =
+            "rom_11_0_0_1036_3281_M27_NZeyMod.zip";
+    private static final long WHOLE_ROM_MIN_BYTES = 380L * 1024L * 1024L;
+    private static final long WHOLE_ROM_MAX_BYTES = 430L * 1024L * 1024L;
     private static final String NZEY_PACKAGE = "com.clone.android.dual.space";
     private static final String NZEY_VERSION = "3.2.68";
     private static final String NZEY_DOWNLOAD_URL =
@@ -99,6 +104,12 @@ public class MainActivity extends Activity {
     private List<String> pickedPartNames = new ArrayList<>();
     private List<String> profileNames = new ArrayList<>();
 
+    private Uri wholeRomUri = null;
+    private String wholeRomName = "";
+    private long wholeRomSize = 0;
+    private boolean wholeRomVerified = false;
+    private String wholeRomPreparedPath = "";
+
     private Spinner spinnerOperatorMode;
     private Spinner spinnerProfiles;
     private TextView tvAndroidId;
@@ -110,6 +121,10 @@ public class MainActivity extends Activity {
     private TextView tvPartsList;
     private TextView tvRomProgress;
     private TextView tvRomResult;
+    private TextView tvWholeRomInfo;
+    private TextView tvWholeRomProgress;
+    private TextView tvWholeRomResult;
+    private TextView tvImportSteps;
     private TextView tvMagiskStatus;
     private TextView tvModules;
     private TextView tvDenyList;
@@ -118,6 +133,7 @@ public class MainActivity extends Activity {
     private TextView tvNzeyInstalled;
     private EditText etProfileName;
     private ProgressBar progressBarRom;
+    private ProgressBar progressBarWholeRom;
     private Switch switchMagisk;
 
     @Override
@@ -136,6 +152,10 @@ public class MainActivity extends Activity {
         tvPartsList = findViewById(R.id.tvPartsList);
         tvRomProgress = findViewById(R.id.tvRomProgress);
         tvRomResult = findViewById(R.id.tvRomResult);
+        tvWholeRomInfo = findViewById(R.id.tvWholeRomInfo);
+        tvWholeRomProgress = findViewById(R.id.tvWholeRomProgress);
+        tvWholeRomResult = findViewById(R.id.tvWholeRomResult);
+        tvImportSteps = findViewById(R.id.tvImportSteps);
         tvMagiskStatus = findViewById(R.id.tvMagiskStatus);
         tvModules = findViewById(R.id.tvModules);
         tvDenyList = findViewById(R.id.tvDenyList);
@@ -144,12 +164,45 @@ public class MainActivity extends Activity {
         tvNzeyInstalled = findViewById(R.id.tvNzeyInstalled);
         etProfileName = findViewById(R.id.etProfileName);
         progressBarRom = findViewById(R.id.progressBarRom);
+        progressBarWholeRom = findViewById(R.id.progressBarWholeRom);
         switchMagisk = findViewById(R.id.switchMagisk);
 
         ArrayAdapter<CharSequence> modeAdapter = ArrayAdapter.createFromResource(
                 this, R.array.operator_modes, android.R.layout.simple_spinner_item);
         modeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOperatorMode.setAdapter(modeAdapter);
+
+        Button btnPickWholeRom = findViewById(R.id.btnPickWholeRom);
+        btnPickWholeRom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickWholeRom();
+            }
+        });
+
+        Button btnVerifyWholeRom = findViewById(R.id.btnVerifyWholeRom);
+        btnVerifyWholeRom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                verifyWholeRom();
+            }
+        });
+
+        Button btnPrepareWholeRom = findViewById(R.id.btnPrepareWholeRom);
+        btnPrepareWholeRom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prepareWholeRom();
+            }
+        });
+
+        Button btnLaunchNzey = findViewById(R.id.btnLaunchNzey);
+        btnLaunchNzey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchNzeyMaster();
+            }
+        });
 
         Button btnGenerate = findViewById(R.id.btnGenerate);
         btnGenerate.setOnClickListener(new View.OnClickListener() {
@@ -267,6 +320,7 @@ public class MainActivity extends Activity {
 
         updateMagiskUi(false);
         refreshProfileList();
+        checkNzeyInstalled();
     }
 
     // ------------------------------------------------------------------
@@ -620,6 +674,279 @@ public class MainActivity extends Activity {
     }
 
     // ------------------------------------------------------------------
+    // Jalankan ROM utuh (impor dari penyimpanan, lalu NZey Master)
+    //
+    // Aplikasi ini BUKAN mesin virtual. Mesinnya adalah NZey Master.
+    // Launcher hanya: memilih ROM utuh, memverifikasi SHA-256,
+    // menyalinnya ke folder NZeyMod/, lalu meluncurkan NZey Master
+    // agar pengguna mengimpornya lewat Import Local ROM.
+    // ------------------------------------------------------------------
+
+    private void pickWholeRom() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(
+                Intent.createChooser(intent, "Pilih ROM utuh"), REQ_PICK_WHOLE_ROM);
+    }
+
+    private void handlePickedWholeRom(Uri uri) {
+        wholeRomUri = uri;
+        wholeRomName = displayName(uri);
+        wholeRomSize = contentLength(uri);
+        wholeRomVerified = false;
+        wholeRomPreparedPath = "";
+        tvImportSteps.setVisibility(View.GONE);
+        StringBuilder sb = new StringBuilder();
+        sb.append("ROM utuh: ").append(wholeRomName).append("\n");
+        sb.append("Ukuran: ").append(formatSize(wholeRomSize))
+                .append(" (").append(wholeRomSize).append(" byte)")
+                .append(" — diharapkan sekitar 405 MB (380–430 MB): ")
+                .append(wholeRomSize >= WHOLE_ROM_MIN_BYTES
+                        && wholeRomSize <= WHOLE_ROM_MAX_BYTES ? "sesuai" : "DI LUAR RENTANG");
+        if (wholeRomName.toLowerCase(Locale.US).matches(".*\\.part\\d+$")) {
+            sb.append("\nPERINGATAN: nama berkas berakhiran .part — "
+                    + "ini tampak seperti bagian ROM terpisah, bukan ROM utuh. "
+                    + "Gabungkan dahulu di bagian Gabung ROM.");
+        }
+        tvWholeRomInfo.setText(sb.toString());
+        tvWholeRomResult.setText("Berkas dipilih. Tekan Verifikasi ROM Utuh "
+                + "untuk menghitung SHA-256.");
+        toast("ROM utuh dipilih");
+    }
+
+    private void verifyWholeRom() {
+        if (wholeRomUri == null) {
+            toast("Pilih ROM utuh terlebih dahulu");
+            tvWholeRomResult.setText("GAGAL — tidak ada berkas yang dipilih.");
+            return;
+        }
+        progressBarWholeRom.setVisibility(View.VISIBLE);
+        progressBarWholeRom.setProgress(0);
+        tvWholeRomProgress.setText("Menghitung SHA-256…");
+        tvWholeRomResult.setText("");
+        final Uri uri = wholeRomUri;
+        final long total = wholeRomSize;
+        final Context context = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                    long readTotal = 0;
+                    InputStream in = null;
+                    try {
+                        in = context.getContentResolver().openInputStream(uri);
+                        if (in == null) {
+                            throw new IOException("Tidak dapat membuka berkas ROM");
+                        }
+                        byte[] buffer = new byte[64 * 1024];
+                        int read;
+                        while ((read = in.read(buffer)) != -1) {
+                            digest.update(buffer, 0, read);
+                            readTotal += read;
+                            final int percent = total > 0
+                                    ? (int) (readTotal * 100 / total) : 0;
+                            final long done = readTotal;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBarWholeRom.setProgress(percent);
+                                    tvWholeRomProgress.setText("Menghitung SHA-256… "
+                                            + percent + "% (" + formatSize(done) + ")");
+                                }
+                            });
+                        }
+                    } finally {
+                        if (in != null) {
+                            try {
+                                in.close();
+                            } catch (IOException ignored) {
+                                // Abaikan kegagalan penutupan stream.
+                            }
+                        }
+                    }
+                    final String actualHash = bytesToHex(digest.digest());
+                    final long finalSize = readTotal;
+                    final boolean sizeOk = finalSize >= WHOLE_ROM_MIN_BYTES
+                            && finalSize <= WHOLE_ROM_MAX_BYTES;
+                    final boolean hashOk = EXPECTED_ROM_SHA256.equalsIgnoreCase(actualHash);
+                    final boolean ok = sizeOk && hashOk;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            wholeRomVerified = ok;
+                            tvImportSteps.setVisibility(View.GONE);
+                            progressBarWholeRom.setProgress(100);
+                            tvWholeRomProgress.setText("Selesai: " + formatSize(finalSize));
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("Nama: ").append(wholeRomName).append("\n");
+                            sb.append("Ukuran: ").append(formatSize(finalSize))
+                                    .append(" (").append(finalSize).append(" byte)")
+                                    .append(" — diharapkan sekitar 405 MB: ")
+                                    .append(sizeOk ? "sesuai" : "DI LUAR RENTANG").append("\n");
+                            sb.append("SHA-256: ").append(actualHash).append("\n");
+                            sb.append("Hasil: ").append(ok ? "LOLOS" : "GAGAL — impor ditolak");
+                            if (!ok) {
+                                sb.append("\nKemungkinan penyebab:");
+                                if (!hashOk) {
+                                    sb.append("\n- Berkas rusak / corrupt saat diunduh atau disalin.");
+                                    sb.append("\n- Berkas ini bukan ROM NZeyMod utuh.");
+                                }
+                                if (wholeRomName.toLowerCase(Locale.US)
+                                        .matches(".*\\.part\\d+$")) {
+                                    sb.append("\n- Berkas ini masih berupa bagian ROM terpisah "
+                                            + "(.part00–.part04). Gabungkan dahulu di bagian "
+                                            + "Gabung ROM.");
+                                }
+                                if (!sizeOk) {
+                                    sb.append("\n- Ukuran berkas jauh dari 405 MB: kemungkinan "
+                                            + "berkas terpotong atau belum selesai diunduh.");
+                                }
+                                sb.append("\nJangan mengimpor berkas yang gagal verifikasi.");
+                            }
+                            tvWholeRomResult.setText(sb.toString());
+                            toast(ok ? "ROM utuh lolos verifikasi"
+                                    : "ROM utuh gagal verifikasi");
+                        }
+                    });
+                } catch (final Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvWholeRomProgress.setText("Gagal memverifikasi");
+                            tvWholeRomResult.setText("Galat: " + e.getMessage());
+                            toast("Gagal memverifikasi ROM: " + e.getMessage());
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void prepareWholeRom() {
+        if (wholeRomUri == null) {
+            toast("Pilih ROM utuh terlebih dahulu");
+            return;
+        }
+        if (!wholeRomVerified) {
+            toast("Verifikasi ROM utuh terlebih dahulu hingga LOLOS");
+            tvWholeRomResult.setText("Impor ditolak: ROM belum lolos verifikasi SHA-256. "
+                    + "Tekan Verifikasi ROM Utuh terlebih dahulu.");
+            return;
+        }
+        File dir = getNzeyModDir();
+        if (dir == null) {
+            toast("Penyimpanan eksternal aplikasi tidak tersedia");
+            return;
+        }
+        final File dest = new File(dir, WHOLE_ROM_FILENAME);
+        final Uri uri = wholeRomUri;
+        final Context context = this;
+        progressBarWholeRom.setVisibility(View.VISIBLE);
+        progressBarWholeRom.setProgress(0);
+        tvWholeRomProgress.setText("Menyalin ke NZeyMod/…");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                    long copied = 0;
+                    InputStream in = null;
+                    OutputStream out = null;
+                    try {
+                        in = context.getContentResolver().openInputStream(uri);
+                        if (in == null) {
+                            throw new IOException("Tidak dapat membuka berkas ROM");
+                        }
+                        out = new FileOutputStream(dest);
+                        byte[] buffer = new byte[64 * 1024];
+                        int read;
+                        while ((read = in.read(buffer)) != -1) {
+                            out.write(buffer, 0, read);
+                            digest.update(buffer, 0, read);
+                            copied += read;
+                            final int percent = wholeRomSize > 0
+                                    ? (int) (copied * 100 / wholeRomSize) : 0;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBarWholeRom.setProgress(percent);
+                                }
+                            });
+                        }
+                        out.flush();
+                    } finally {
+                        if (in != null) {
+                            try {
+                                in.close();
+                            } catch (IOException ignored) {
+                                // Abaikan kegagalan penutupan stream.
+                            }
+                        }
+                        if (out != null) {
+                            try {
+                                out.close();
+                            } catch (IOException ignored) {
+                                // Abaikan kegagalan penutupan stream.
+                            }
+                        }
+                    }
+                    final String copyHash = bytesToHex(digest.digest());
+                    final long finalSize = copied;
+                    final boolean ok = EXPECTED_ROM_SHA256.equalsIgnoreCase(copyHash);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!ok) {
+                                tvWholeRomProgress.setText("Gagal menyiapkan");
+                                tvWholeRomResult.setText("GAGAL — hash salinan tidak cocok ("
+                                        + copyHash + "). Hapus salinan dan verifikasi ulang.");
+                                toast("Salinan ROM gagal verifikasi");
+                                return;
+                            }
+                            wholeRomPreparedPath = dest.getAbsolutePath();
+                            tvWholeRomProgress.setText("Siap: " + formatSize(finalSize));
+                            tvWholeRomResult.setText("ROM utuh disiapkan di:\n"
+                                    + wholeRomPreparedPath + "\n"
+                                    + "SHA-256 salinan: " + copyHash + " (LOLOS)");
+                            tvImportSteps.setVisibility(View.VISIBLE);
+                            toast("ROM siap diimpor ke NZey Master");
+                        }
+                    });
+                } catch (final Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvWholeRomProgress.setText("Gagal menyiapkan");
+                            tvWholeRomResult.setText("Galat: " + e.getMessage());
+                            toast("Gagal menyiapkan ROM: " + e.getMessage());
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void launchNzeyMaster() {
+        PackageManager pm = getPackageManager();
+        Intent launch = pm.getLaunchIntentForPackage(NZEY_PACKAGE);
+        if (launch == null) {
+            tvNzeyInstalled.setText("Status pemasangan: belum terinstal. "
+                    + "Unduh NZey Master " + NZEY_VERSION + " (145 MB, SHA-256 "
+                    + NZEY_SHA256 + ") lalu pasang. "
+                    + "Hapus Virtual Master lama terlebih dahulu karena "
+                    + "tanda tangannya berbeda.");
+            toast("NZey Master belum terpasang — unduh terlebih dahulu");
+            return;
+        }
+        launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(launch);
+        toast("Membuka NZey Master — impor ROM lewat + > titik tiga > Import Local ROM");
+    }
+
+    // ------------------------------------------------------------------
     // Gabung ROM (Storage Access Framework)
     // ------------------------------------------------------------------
 
@@ -662,6 +989,11 @@ public class MainActivity extends Activity {
             Uri uri = data.getData();
             if (uri != null) {
                 handlePickedKeybox(uri);
+            }
+        } else if (requestCode == REQ_PICK_WHOLE_ROM) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                handlePickedWholeRom(uri);
             }
         }
     }
