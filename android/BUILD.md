@@ -1,8 +1,8 @@
-# NZeyMod Manager — Build Manual
+# NZeyMod Launcher — Build Manual
 
 Aplikasi Android native (Java saja, tanpa Gradle, tanpa dependensi eksternal).
-Paket: `com.kizakixd.nzeymodmanager`, label NZeyMod Manager, minSdk 26,
-targetSdk 34, versionCode 1, versionName 1.0-beta.
+Paket: `com.kizakixd.nzeymodmanager`, label NZeyMod Launcher, minSdk 26,
+targetSdk 34, versionCode 2, versionName 2.0-beta.
 
 ## Prasyarat
 
@@ -39,5 +39,6 @@ Hasil: `app/build/manual/app-debug.apk`
   `registerForActivityResult`, yang berasal dari androidx).
 - Identitas dan profil disimpan di direktori file eksternal aplikasi,
   `Android/data/com.kizakixd.nzeymodmanager/files/NZeyMod/`.
-- Aplikasi ini BUKAN mesin virtual; aplikasi ini hanya pengelola
-  identitas, profil, ROM, dan modul untuk NZey Master.
+- Aplikasi ini BUKAN mesin virtual; aplikasi ini hanya menyiapkan dan
+  mengimpor ROM, lalu meluncurkan NZey Master. ROM berjalan di dalam
+  NZey Master.

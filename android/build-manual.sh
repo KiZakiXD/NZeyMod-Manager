@@ -34,7 +34,7 @@ echo "== 2. aapt2 link (APK + R.java) =="
   -I "$ANDROID_JAR" \
   --java "$OUT/gen" \
   --min-sdk-version 26 --target-sdk-version 34 \
-  --version-code 1 --version-name "1.0-beta" \
+  --version-code 2 --version-name "2.0-beta" \
   --auto-add-overlay \
   "$OUT/compiled.zip"
 
